@@ -1,0 +1,19 @@
+<launch>
+	<node pkg="octomap_server" type="octomap_server_node" name="octomap_server"> 
+ 
+     	<!--栅格分辨率-->
+    	<param name="resolution" value="0.05" />
+    
+    	<!--世界坐标系话题world-->
+    	<param name="frame_id" type="string" value="map" />
+
+     	<!--订阅的点云消息名称 PointCloud2，即发布出来的点云topic--> 
+     	<param name="sensor_model/hit"  value="0.9" />
+     	<param name="sensor_model/miss" value="0.4" />
+     	<param name="pointcloud_max_z" value="0.4" />
+     	<param name="pointcloud_min_z" value="-0.1" />
+     	<!-- cloud_in是octomap默认的输入话题-->
+    	<remap from="cloud_in" to="/3dmap" />
+    	</node>
+</launch>
+

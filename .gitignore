@@ -1,0 +1,6 @@
+FAST_LIO/Log/*.png
+FAST_LIO/Log/*.txt
+FAST_LIO/Log/*.csv
+FAST_LIO/Log/*.pdf
+FAST_LIO/PCD/*
+FAST_LIO/map/*

@@ -1,0 +1,27 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/adminpc/catkin_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/adminpc/catkin_ws/src/sp_control/chassis_controller/include/**",
+        "/home/adminpc/catkin_ws/src/sp_control/gimbal_controller/include/**",
+        "/home/adminpc/catkin_ws/src/sp_control/manipulator_control/include/**",
+        "/home/adminpc/catkin_ws/src/sp_control/sentry_communicator/include/**",
+        "/home/adminpc/catkin_ws/src/sp_common/include/**",
+        "/home/adminpc/catkin_ws/src/sp_hw/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

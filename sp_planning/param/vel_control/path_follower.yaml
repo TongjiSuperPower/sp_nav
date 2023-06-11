@@ -1,0 +1,8 @@
+max_linear_speed: 1.0 #0.8
+max_vel_theta: 4.5
+distance_tolerance: 0.2 # 0.3
+radius: 0.1
+tracking_tolerance: 0.25 # 0.5
+linear_kp: 4.0 # 1.5
+linear_ki: 0.00 # 0.00
+linear_kd: 0.00 # 0.00

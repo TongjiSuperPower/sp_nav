@@ -1,0 +1,6 @@
+<launch>
+	<node pkg="fast_lio" type="navigation_model" name="navigation_model" output="screen"> 
+ 	<rosparam file="$(find sp_planning)/param/navigation_model/navigation_model.yaml" command="load" />
+    	</node>
+</launch>
+

@@ -1,0 +1,17 @@
+# 规划器选择
+base_global_planner: "global_planner/GlobalPlanner"  
+base_local_planner: "local_planner/LocalPlanner"
+
+
+# 全局规划器私有配置，http://wiki.ros.org/global_planner
+GlobalPlanner:
+    old_navfn_behavior: false # 使用老版，true时导致其他参数无效
+    use_quadratic: true # 使用势的二次近似。否则，使用更简单的计算，默认true
+    use_dijkstra: true  # 使用Dijkstra算法，false时使用 A star 算法
+    use_grid_path: false # 创建遵循网格边界的路径(折线)，否则使用梯度下降法，默认false
+    allow_unknown: true  # 允许planner通过未知空间进行规划，默认true；需要有 track_unknown_space: true 在障碍物/体素层（在 costmap_commons_param 中）才能工作
+
+    planner_window_x: 0.0  # default 0.0
+    planner_window_y: 0.0  # default 0.0
+    default_tolerance: 10.0 # 如果目标在障碍物中，则计划到半径内最近的点 default_tolerance，默认 0.0
+

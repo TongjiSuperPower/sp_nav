@@ -47,6 +47,5 @@
 
 <export>
   <nav_core plugin="${prefix}/sp_local_planner_plugin.xml" />
-  <nav_core plugin="${prefix}/sp_way_points_publisher.xml" />
 </export>
 </package>

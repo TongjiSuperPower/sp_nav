@@ -1,7 +1,0 @@
-<library path="lib/libsp_way_points_publisher">
-        <class name ="way_points_publisher/WayPointPublisher" type ="way_points_publisher::WayPointPublisher" base_class_type= "nav_core::BaseLocalPlanner">
-                <description>
-                        Simplest Plugin for BaseLocalPlanner
-                </description>
-        </class>
-</library>

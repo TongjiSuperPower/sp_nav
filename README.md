@@ -43,5 +43,10 @@ ROS    >= Melodic. [ROS Installation](http://wiki.ros.org/ROS/Installation)
 ## 3.2 run
 参考FAST_LIO功能包下的操作说明.md
 
+运行出此效果后，再继续验证与裁判系统的通信
+<div align="center">
+    <img src="img/map.png" width=80% >
+</div>
+
 ## 3.3 2023赛季Rosbag
-哨兵建图10分钟Rosbag[https://tj-superpower.feishu.cn/file/L1oybir3dogzCBx3pPfc247tnWc]
+[哨兵建图10分钟Rosbag](https://tj-superpower.feishu.cn/file/L1oybir3dogzCBx3pPfc247tnWc)

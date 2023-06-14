@@ -1,6 +1,6 @@
 #include "aerial_navigation/aerial_navigation.h"
 
-GoalSending::GoalSending(): Action("move_base", true){
+GoalSending::GoalSending() : Action("move_base", true) {
 
     // 订阅定位是否成功
     localization_sub_ = nh_.subscribe("/localization_success", 1, &GoalSending::localizationCallback, this);
@@ -11,38 +11,38 @@ GoalSending::GoalSending(): Action("move_base", true){
     // 订阅从裁判系统发过来的的坐标位置
     referee_data_sub_ = nh_.subscribe("/referee_data", 1, &GoalSending::refereeCallback, this);
     // 构建机器人位置发布定时器
-    timer_pos_write_ = nh_.createTimer(ros::Duration(0.1), &GoalSending::posWrite, this);  
+    timer_pos_write_ = nh_.createTimer(ros::Duration(0.1), &GoalSending::posWrite, this);
 
     ROS_INFO("Starting success");
 
 }
 
-void GoalSending::localizationCallback(const std_msgs::Bool::ConstPtr& msg){
+void GoalSending::localizationCallback(const std_msgs::Bool::ConstPtr& msg) {
     if (msg->data)
     {
-    	localization_success_ = true;
+        localization_success_ = true;
     }
 }
 
-void GoalSending::idle(){
-      geometry_msgs::Twist cmd_vel;
-      cmd_vel.linear.x = 0;
-      cmd_vel.linear.y = 0;
-      cmd_vel.angular.z = max_vel_theta_;
-      vel_pub_.publish(cmd_vel);
+void GoalSending::idle() {
+    geometry_msgs::Twist cmd_vel;
+    cmd_vel.linear.x = 0;
+    cmd_vel.linear.y = 0;
+    cmd_vel.angular.z = max_vel_theta_;
+    vel_pub_.publish(cmd_vel);
 }
 
-void GoalSending::stop(){
-      geometry_msgs::Twist cmd_vel;
-      cmd_vel.linear.x = 0;
-      cmd_vel.linear.y = 0;
-      cmd_vel.angular.z = 0;
-      vel_pub_.publish(cmd_vel);
+void GoalSending::stop() {
+    geometry_msgs::Twist cmd_vel;
+    cmd_vel.linear.x = 0;
+    cmd_vel.linear.y = 0;
+    cmd_vel.angular.z = 0;
+    vel_pub_.publish(cmd_vel);
 }
 
-void GoalSending::refereeCallback(const geometry_msgs::Point::ConstPtr& msg){
+void GoalSending::refereeCallback(const geometry_msgs::Point::ConstPtr& msg) {
     //使用realtime_buffer保证接收
-    Referee referee_struct_temp{.referee_pos_ = *msg, .stamp_ = ros::Time::now()};
+    Referee referee_struct_temp{ .referee_pos_ = *msg, .stamp_ = ros::Time::now() };
     realtime_buffer_.writeFromNonRT(referee_struct_temp);
 }
 
@@ -53,39 +53,39 @@ void GoalSending::robotStatePub(RobotState state_) {
 }
 
 void GoalSending::doneCb(const actionlib::SimpleClientGoalState& state,
-                         const move_base_msgs::MoveBaseResultConstPtr& result) {
-  if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
-    ROS_INFO("SUCCEEDED");
-  }
+    const move_base_msgs::MoveBaseResultConstPtr& result) {
+    if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
+        ROS_INFO("SUCCEEDED");
+    }
 }
 
 void GoalSending::activeCb() {
-  ROS_INFO("Goal Received");
+    ROS_INFO("Goal Received");
 }
 
-void GoalSending::posWrite(const ros::TimerEvent& event){
-    const geometry_msgs::Point &referee_pos = realtime_buffer_.readFromNonRT()->referee_pos_;
+void GoalSending::posWrite(const ros::TimerEvent& event) {
+    const geometry_msgs::Point& referee_pos = realtime_buffer_.readFromNonRT()->referee_pos_;
 
     if (!Action.waitForServer(ros::Duration(60)))
     {
-          ROS_INFO("Can't connected to move base server");
+        ROS_INFO("Can't connected to move base server");
     }
     //判断相同点不执行
-    if(target_pose_.pose.position.x == referee_pos.x && target_pose_.pose.position.y == referee_pos.y) return;
+    if (target_pose_.pose.position.x == referee_pos.x && target_pose_.pose.position.y == referee_pos.y) return;
     //原地小陀螺
-    if(fabs(referee_pos.z - 's') < 1e-3||fabs(referee_pos.z - 'S') < 1e-3)
+    if (fabs(referee_pos.z - 's') < 1e-3 || fabs(referee_pos.z - 'S') < 1e-3)
     {
         robotStatePub(IDLE);
         idle();
         return;
     }
-    if (fabs(referee_pos.z - 'q') < 1e-3||fabs(referee_pos.z - 'Q') < 1e-3)
+    if (fabs(referee_pos.z - 'q') < 1e-3 || fabs(referee_pos.z - 'Q') < 1e-3)
     {
         robotStatePub(STOP);
         stop();
         return;
     }
-    
+
 
     target_pose_.header.frame_id = "world";
     target_pose_.header.stamp = ros::Time::now();
@@ -98,14 +98,14 @@ void GoalSending::posWrite(const ros::TimerEvent& event){
     target_pose_.pose.orientation.w = 0.0;
 
     goal_.target_pose = target_pose_;
-    
-    
-    if(fabs(referee_pos.z - 'd') < 1e-3||fabs(referee_pos.z - 'D') < 1e-3)
+
+
+    if (fabs(referee_pos.z - 'd') < 1e-3 || fabs(referee_pos.z - 'D') < 1e-3)
     {
         //小陀螺前进
         robotStatePub(CRUISR);
     }
-    else if(fabs(referee_pos.z - 'a') < 1e-3||fabs(referee_pos.z - 'A') < 1e-3)
+    else if (fabs(referee_pos.z - 'a') < 1e-3 || fabs(referee_pos.z - 'A') < 1e-3)
     {
         //快速前进
         robotStatePub(FAST);
@@ -116,8 +116,8 @@ void GoalSending::posWrite(const ros::TimerEvent& event){
         robotStatePub(MOVE);
     }
     Action.sendGoal(goal_, boost::bind(&GoalSending::doneCb, this, _1, _2),
-                  boost::bind(&GoalSending::activeCb, this),
-                  Client::SimpleFeedbackCallback());
+        boost::bind(&GoalSending::activeCb, this),
+        Client::SimpleFeedbackCallback());
 
     //Action.waitForResult();
     return;

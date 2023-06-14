@@ -1,0 +1,14 @@
+<launch>
+    <param name="fight_mode" value="2"/>
+    
+    <param name="loop_rate" value="5"/>
+    <!--回加血点的血量-->
+    <param name="min_hp" value="200"/>
+    <!--撤退回启动区的条件-->
+    <param name="min_bullet" value="100"/>
+    <param name="min_outpost" value="200"/>
+    <!--到达启动区开始自旋的距离阈值-->
+    <param name="distance_tolerance" value="0.2"/>
+
+    <node pkg="sp_decision" type="sp_decision" name="sp_decision" output="screen"/>
+</launch>

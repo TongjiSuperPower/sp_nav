@@ -4,8 +4,7 @@
  * @brief  状态切换
  * @version 0.2
  * @date 2023-04-06
- *
- *
+ * DANGER: 该段代码的机器人状态为联盟赛时期维护，现已废弃，留存目的是给chen heming以及liwei学习使用，新状态请参考sp_local_planner以及sp_decison
  */
 #ifndef NAVIGATION_MODEL_H
 #define NAVIGATION_MODEL_H

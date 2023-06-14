@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="sim_referee_system" type="sim_referee_system" name="sim_referee_system" output="screen"/>
+</launch>

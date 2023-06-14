@@ -35,7 +35,7 @@
 	<!-- move_base-->
 	<rosparam command="load" file="$(find sp_planning)/param/vel_control/path_follower.yaml" />
 	<include file="$(find sp_planning)/launch/relocalization_move_base.launch" /> 
-	<!-- <include file="$(find sp_planning)/launch/relocalization_nav_model.launch" /> -->
+	<!-- 云台手操控-->
 	<node pkg="aerial_navigation" type="aerial_navigation" name="aerial_navigation" output="screen"/>
 	<node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find fast_lio)/rviz_cfg/localization.rviz" />
 

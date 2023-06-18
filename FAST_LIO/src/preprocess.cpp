@@ -251,8 +251,6 @@ void Preprocess::oust64_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
   else
   {
     double time_stamp = msg->header.stamp.toSec();
-    // cout << "===================================" << endl;
-    // printf("Pt size = %d, N_SCANS = %d\r\n", plsize, N_SCANS);
     for (int i = 0; i < pl_orig.points.size(); i++)
     {
       if (i % point_filter_num != 0) continue;
@@ -455,6 +453,7 @@ void Preprocess::velodyne_handler(const sensor_msgs::PointCloud2::ConstPtr &msg)
 
 void Preprocess::give_feature(pcl::PointCloud<PointType> &pl, vector<orgtype> &types)
 {
+  //单条线的点数
   int plsize = pl.size();
   int plsize2;
   if(plsize == 0)

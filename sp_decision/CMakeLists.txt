@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   geometry_msgs
   nav_msgs
+  actionlib_msgs
 )
 
 catkin_package(

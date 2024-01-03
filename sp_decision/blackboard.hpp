@@ -12,8 +12,29 @@
 #include <nav_msgs/Odometry.h>
 #include <robot_msg/MatchMsg.h>
 #include <ros/ros.h>
+#include <actionlib_msgs/GoalStatusArray.h>
+/**0：PENDING（等待） - 导航目标正在等待处理。
 
+1：ACTIVE（激活） - 导航目标正在被执行。
+
+2：PREEMPTED（中断） - 导航目标被中断。
+
+3：SUCCEEDED（成功完成） - 导航目标成功完成。
+
+4：ABORTED（中止） - 导航目标被中止。
+
+5：REJECTED（拒绝） - 导航目标被拒绝。
+
+6：PREEMPTING（正在中断） - 导航目标正在被中断。
+
+7：RECALLING（正在召回） - 导航目标正在被召回。
+
+8：RECALLED（已召回） - 导航目标已经被召回。
+
+9：LOST（丢失） - 导航目标丢失。
+*/
 namespace sp_decision {
+enum class NavState { ACTIVE, PREEMPTED, SUCCEEDED, ABORTED, REJECTED, PREEMPTING, RECALLING, RECALLED, LOST };
 class Blackboard {
  public:
   typedef std::shared_ptr<Blackboard> Ptr;
@@ -25,6 +46,10 @@ class Blackboard {
         
     referee_data_sub_ = nh_.subscribe("referee_data", 1, 
                                         &Blackboard::RefereeDataCallback, this);
+    move_base_status_sub_ = nh_.subscribe<actionlib_msgs::GoalStatusArray>("move_base/status",10000,
+                                         &Blackboard::MoveBaseStatusCallback, this);
+
+                                        
     nh_.param("min_hp", min_hp_, 200);
     nh_.param("min_bullet", min_bullet_, 100);
     nh_.param("min_outpost", min_outpost_, 300);
@@ -34,6 +59,7 @@ class Blackboard {
   std::mutex match_status_cbk_mutex;
   std::mutex robot_odom_cbk_mutex;
   std::mutex referee_data_cbk_mutex;
+  std::mutex move_base_status_cbk_mutex;
 
   void ResetFlag() {
     robot_odom_received_ = false;
@@ -64,10 +90,16 @@ class Blackboard {
   uint16_t outpost_hp_;
   nav_msgs::Odometry robot_pose_;
 
-  //云台手通信
+  /**
+   * @brief 云台手通信
+   */
   float posx_x_;
   float posy_y_;
   float key_z_;
+  /**
+   * @brief 机器人导航状态
+   */
+   NavState nav_state_;
 
 
  private:
@@ -75,6 +107,7 @@ class Blackboard {
   ros::Subscriber match_status_sub_;
   ros::Subscriber robot_odom_sub_;
   ros::Subscriber referee_data_sub_;
+  ros::Subscriber move_base_status_sub_;
 
   bool robot_odom_received_;
   bool match_state_received_;
@@ -83,6 +116,7 @@ class Blackboard {
     match_status_cbk_mutex.lock();
     robot_hp_ = msg->robot_hp;
     robot_bullet_ = msg->robot_bullet;
+
     match_state_received_ = true;
     match_status_cbk_mutex.unlock();
   }
@@ -99,6 +133,21 @@ class Blackboard {
     posy_y_ = msg->y;
     key_z_  = msg->z; 
     referee_data_cbk_mutex.unlock();
+  }
+  void MoveBaseStatusCallback(const actionlib_msgs::GoalStatusArray::ConstPtr& msg){
+    move_base_status_cbk_mutex.lock();
+    std::cout<<msg->status_list[0].text<<std::endl;
+    if(msg->status_list[0].status == 1)
+    {
+      nav_state_ = NavState::ACTIVE;
+      std::cout<<"running"<<std::endl;
+    }
+    else if(msg->status_list[0].status == 3)
+    {
+      nav_state_ = NavState::SUCCEEDED;
+      std::cout<<"success"<<std::endl;
+    }
+    move_base_status_cbk_mutex.unlock();
   }
 };
 }  // namespace sp_decision

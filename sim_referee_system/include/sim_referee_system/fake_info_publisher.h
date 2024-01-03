@@ -20,6 +20,7 @@ class FakeInfoPublisher {
   void GameStart();
   void Attacked();
   void LackBullet();
+  void UserSetStatus(int match_state, int robot_hp, int robot_bullet, int outpost_hp);
   void SwitchScenarios(int id);
 
  private:

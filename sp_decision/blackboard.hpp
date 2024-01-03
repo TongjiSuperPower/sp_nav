@@ -45,7 +45,7 @@ class Blackboard {
   };
 
   // buff点坐标: 原点、加血点、buff点
-  std::vector<Point> buff_pos_ = {{0.0, 0.0}, {0.5, 2.79}, {1.9, 1.65}};
+  std::vector<Point> buff_pos_ = {{0.0, 0.0}, {2.5, 0}, {-0.5, 0}};
   int min_hp_;
   int min_bullet_;
   int min_outpost_;

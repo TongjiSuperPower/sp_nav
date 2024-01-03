@@ -1,0 +1,27 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/rm/sp_nav_ws/devel/include/**",
+        "/home/rm/ws_livox2/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/rm/sp_nav_ws/src/sp_nav/aerial_navigation/include/**",
+        "/home/rm/sp_nav_ws/src/sp_nav/FAST_LIO/include/**",
+        "/home/rm/sp_nav_ws/src/sp_nav/sentry_communicator/include/**",
+        "/home/rm/sp_nav_ws/src/sp_nav/sim_referee_system/include/**",
+        "/home/rm/sp_nav_ws/src/sp_nav/sp_planning/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

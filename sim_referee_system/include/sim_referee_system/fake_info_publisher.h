@@ -2,7 +2,7 @@
 #define FAKE_INFO_H
 #include <robot_msg/MatchMsg.h>
 #include <ros/ros.h>
-
+#include <ros/>
 #include <iostream>
 #include <random>
 #include <string>
@@ -27,6 +27,7 @@ class FakeInfoPublisher {
   ros::NodeHandle nh_;
   ros::Publisher fake_info_publihser_;
   robot_msg::MatchMsg match_msg_;
+  geometry_msgs::Point 
   void FakeInfoPub();
   struct RandomNumberGenerator {
    public:

@@ -24,6 +24,7 @@ void FakeInfoPublisher::UserSetStatus(int match_state, int robot_hp, int robot_b
 
 std::string userinput;
 int userorder[4];
+std::string playerorder[3];
 void FakeInfoPublisher::SwitchScenarios(int id) {
   switch (id) {
     case 1:
@@ -47,11 +48,20 @@ void FakeInfoPublisher::SwitchScenarios(int id) {
         userstr >> userorder[j];
         std::cout<<userorder[j]<<std::endl;
       }
-      // while (iss >> number) {
-      //   numbers.push_back(number);
-      // }
-
       UserSetStatus(userorder[0],userorder[1],userorder[2],userorder[3]);
+      break;
+    }
+    case 5:
+    {
+      std::cout<<"依次键入数据:云台手标点x,云台手标点y,云台手按键；"<<std::endl;
+      std::getline(std::cin, userinput);
+      std::istringstream userstr(userinput);
+      for (int k=0;k<3;k++)
+      {
+        userstr >> playerorder[k];
+        std::cout << playerorder[k]<<std::endl;
+        std::cout << userinput<<std::endl;
+      }
       break;
     }
     default:

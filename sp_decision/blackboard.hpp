@@ -22,6 +22,9 @@ class Blackboard {
                                       &Blackboard::MatchStatusCallback, this);
     robot_odom_sub_ =
         nh_.subscribe("localization", 1, &Blackboard::RobotPoseCallback, this);
+        
+    referee_data_sub_ = nh_.subscribe("referee_data", 1, 
+                                        &Blackboard::RefereeDataCallback, this);
     nh_.param("min_hp", min_hp_, 200);
     nh_.param("min_bullet", min_bullet_, 100);
     nh_.param("min_outpost", min_outpost_, 300);
@@ -30,6 +33,7 @@ class Blackboard {
   ~Blackboard() {}
   std::mutex match_status_cbk_mutex;
   std::mutex robot_odom_cbk_mutex;
+  std::mutex referee_data_cbk_mutex;
 
   void ResetFlag() {
     robot_odom_received_ = false;
@@ -60,10 +64,17 @@ class Blackboard {
   uint16_t outpost_hp_;
   nav_msgs::Odometry robot_pose_;
 
+  //云台手通信
+  float posx_x_;
+  float posy_y_;
+  float key_z_;
+
+
  private:
   ros::NodeHandle nh_;
   ros::Subscriber match_status_sub_;
   ros::Subscriber robot_odom_sub_;
+  ros::Subscriber referee_data_sub_;
 
   bool robot_odom_received_;
   bool match_state_received_;
@@ -81,6 +92,13 @@ class Blackboard {
     robot_pose_ = *msg;
     robot_odom_received_ = true;
     robot_odom_cbk_mutex.unlock();
+  }
+  void RefereeDataCallback(const geometry_msgs::Point::ConstPtr& msg){
+    referee_data_cbk_mutex.lock();
+    posx_x_ = msg->x;
+    posy_y_ = msg->y;
+    key_z_  = msg->z; 
+    referee_data_cbk_mutex.unlock();
   }
 };
 }  // namespace sp_decision

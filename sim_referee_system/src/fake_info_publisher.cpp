@@ -1,5 +1,6 @@
 #include <fake_info_publisher.h>
 #include<sstream>
+
 void FakeInfoPublisher::GameStart() { match_msg_.match_state = 1; }
 void FakeInfoPublisher::Attacked() {
   match_msg_.match_state = 1;
@@ -19,8 +20,6 @@ void FakeInfoPublisher::UserSetStatus(int match_state, int robot_hp, int robot_b
   match_msg_.robot_bullet = robot_bullet;
   match_msg_.outpost_hp = outpost_hp;
 }
-
-
 
 std::string userinput;
 int userorder[4];
@@ -46,7 +45,6 @@ void FakeInfoPublisher::SwitchScenarios(int id) {
       for(int j=0;j<4;j++)
       {
         userstr >> userorder[j];
-        std::cout<<userorder[j]<<std::endl;
       }
       UserSetStatus(userorder[0],userorder[1],userorder[2],userorder[3]);
       break;
@@ -59,9 +57,15 @@ void FakeInfoPublisher::SwitchScenarios(int id) {
       for (int k=0;k<3;k++)
       {
         userstr >> playerorder[k];
-        std::cout << playerorder[k]<<std::endl;
-        std::cout << userinput<<std::endl;
+        std::cout<<playerorder[k]<<" ";
       }
+      lower_referee_data_.x = std::stof(playerorder[0]);
+      lower_referee_data_.y = std::stof(playerorder[1]);
+      for (char ch : playerorder[2])
+      {
+      lower_referee_data_.z = static_cast<float>(ch);
+      }
+      FakeRefereeDataPub();
       break;
     }
     default:
@@ -74,6 +78,10 @@ void FakeInfoPublisher::SwitchScenarios(int id) {
 
 void FakeInfoPublisher::FakeInfoPub() {
     fake_info_publihser_.publish(match_msg_);
+}
+
+void FakeInfoPublisher::FakeRefereeDataPub(){
+    fake_referee_data_publisher_.publish(lower_referee_data_);
 }
 
 int main(int argc, char** argv) {

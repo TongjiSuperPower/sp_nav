@@ -22,10 +22,10 @@ class RetreatBehavior : public ActionNode {
                      blackboard_ptr_->robot_pose_.pose.pose.position.y -
                          blackboard_ptr_->buff_pos_[0].y) >
           blackboard_ptr_->distance_tolerance_) {
-        //log_exe_ptr_->info("behavior[retreat]:", "fast move");
+        log_exe_ptr_->info("behavior[retreat]:", "fast move");
         Go2Init();
       } else {
-        //log_exe_ptr_->info("behavior[retreat]:", "idle");
+        log_exe_ptr_->info("behavior[retreat]:", "idle");
         chassis_exe_ptr_->Idle();
       }
       return BehaviorState::SUCCESS;

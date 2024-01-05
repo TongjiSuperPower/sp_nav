@@ -6,7 +6,7 @@
 #include "executor/log_executor.hpp"
 
 namespace sp_decision {
-enum class BehaviorState { SUCCESS, FAILURE };
+enum class BehaviorState { SUCCESS, FAILURE,RUNNING };
 class TreeNode {
  public:
   TreeNode() {}
@@ -72,6 +72,9 @@ class SequenceNode : public TreeNode {
         if (child_node_ptr_list_[i]->Run() == BehaviorState::SUCCESS) {
           return BehaviorState::SUCCESS;
         }
+        // else if(child_node_ptr_list_[i]->Run() == BehaviorState::RUNNING){
+        //   return BehaviorState::SUCCESS;
+        // }
       }
       return BehaviorState::FAILURE;
     }

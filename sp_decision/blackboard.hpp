@@ -140,12 +140,10 @@ class Blackboard {
     if(msg->status_list[0].status == 1)
     {
       nav_state_ = NavState::ACTIVE;
-      std::cout<<"running"<<std::endl;
     }
     else if(msg->status_list[0].status == 3)
     {
       nav_state_ = NavState::SUCCEEDED;
-      std::cout<<"success"<<std::endl;
     }
     move_base_status_cbk_mutex.unlock();
   }

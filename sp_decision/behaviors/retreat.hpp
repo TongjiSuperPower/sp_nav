@@ -58,8 +58,11 @@ class RetreatBehavior : public ActionNode {
           }
     chassis_exe_ptr_->FastMove(blackboard_ptr_->random_mode_pos[random_mode_pos_count].x,
                                blackboard_ptr_->random_mode_pos[random_mode_pos_count].y);
-
-
+    chassis_exe_ptr_->vel_msg_pub_.linear.x = blackboard_ptr_->vel_msg_sub_.linear.x / 2;
+    chassis_exe_ptr_->vel_msg_pub_.linear.y = blackboard_ptr_->vel_msg_sub_.linear.y / 2;
+    chassis_exe_ptr_->vel_msg_pub_.angular.z = 3.0;
+ 
+ 
   }
 };
 }  // namespace sp_decision

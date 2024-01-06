@@ -38,7 +38,7 @@ class ChassisExecutor {
         nh_.advertise<robot_msg::RobotStateMsg>("/robot_state", 1);
     // TODO：
     // 在这里出现速度控制器十分不合理，但是sp_planning是以局部规划器的形式写在move_base框架中，当没有目标点时，里面的速度规划器不会工作
-    vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+    sentry_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("sentry/cmd_vel", 1);
   }
   typedef std::shared_ptr<ChassisExecutor> Ptr;
 
@@ -64,14 +64,14 @@ class ChassisExecutor {
     cmd_vel.linear.x = 0;
     cmd_vel.linear.y = 0;
     cmd_vel.angular.z = max_vel_theta_;
-    vel_pub_.publish(cmd_vel);
+    sentry_vel_pub_.publish(cmd_vel);
   }
   void VelStop() {
     geometry_msgs::Twist cmd_vel;
     cmd_vel.linear.x = 0;
     cmd_vel.linear.y = 0;
     cmd_vel.angular.z = 0;
-    vel_pub_.publish(cmd_vel);
+    sentry_vel_pub_.publish(cmd_vel);
   }
   void Stop() {
     robotStatePub(RobotState::STOP);
@@ -95,14 +95,15 @@ class ChassisExecutor {
     target_pose_.pose.orientation.w = 1.0;
     goal_.target_pose = target_pose_;
     set_goal_pub_.publish(goal_);
-
+    sentry_vel_pub_.publish(vel_msg_pub_);
 
   }
+  geometry_msgs::Twist vel_msg_pub_;
  private:
   ros::NodeHandle nh_;
   ros::Publisher set_goal_pub_;
   ros::Publisher robot_state_pub_;
-  ros::Publisher vel_pub_;
+  ros::Publisher sentry_vel_pub_;
   geometry_msgs::PoseStamped target_pose_;
   move_base_msgs::MoveBaseGoal goal_;
   double max_vel_theta_;

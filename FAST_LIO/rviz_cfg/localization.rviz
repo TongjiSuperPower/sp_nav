@@ -482,6 +482,22 @@ Visualization Manager:
       Topic: /move_base_simple/goal
       Unreliable: false
       Value: false
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: Pose
+      Queue Size: 10
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /move_base/current_goal
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 0; 0; 0
@@ -510,7 +526,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 26.411102294921875
+      Distance: 22.886829376220703
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -518,17 +534,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 5.953756332397461
-        Y: 0.46998533606529236
-        Z: -7.727917194366455
+        X: 2.6431326866149902
+        Y: -0.37334704399108887
+        Z: -9.103515625
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.0747971534729004
+      Pitch: 1.5697963237762451
       Target Frame: body
-      Yaw: 3.113579511642456
+      Yaw: 3.2185819149017334
     Saved: ~
 Window Geometry:
   Displays:

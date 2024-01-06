@@ -19,25 +19,47 @@ class RetreatBehavior : public ActionNode {
         blackboard_ptr_->outpost_hp_ < blackboard_ptr_->min_outpost_) {
 
         
-      if (std::hypot(blackboard_ptr_->robot_pose_.pose.pose.position.x -
-                         blackboard_ptr_->buff_pos_[0].x,
-                     blackboard_ptr_->robot_pose_.pose.pose.position.y -
-                         blackboard_ptr_->buff_pos_[0].y) >
-          blackboard_ptr_->distance_tolerance_) {
-        log_exe_ptr_->info("behavior[retreat]:", "fast move");
-        Go2Init();
-      } else {
-        log_exe_ptr_->info("behavior[retreat]:", "idle");
-        chassis_exe_ptr_->Idle();
-      }
+      // if (std::hypot(blackboard_ptr_->robot_pose_.pose.pose.position.x -
+      //                    blackboard_ptr_->buff_pos_[0].x,
+      //                blackboard_ptr_->robot_pose_.pose.pose.position.y -
+      //                    blackboard_ptr_->buff_pos_[0].y) >
+      //     blackboard_ptr_->distance_tolerance_) {
+      //   log_exe_ptr_->info("behavior[retreat]:", "fast move");
+      //   Go2Init();
+      // } else {
+      //   log_exe_ptr_->info("behavior[retreat]:", "idle");
+      //   RandomMode();
+      //   //chassis_exe_ptr_->Idle();
+      // }
+      RandomMode();
+      log_exe_ptr_->info("behavior[retreat]:", "fast move");
+
       return BehaviorState::SUCCESS;
     }
   }
 
  private:
+  int random_mode_pos_count = 0;
+
   void Go2Init() {
     chassis_exe_ptr_->FastMove(blackboard_ptr_->buff_pos_[0].x,
                                blackboard_ptr_->buff_pos_[0].y);
+  }
+  void RandomMode(){
+    if (std::hypot(blackboard_ptr_->robot_pose_.pose.pose.position.x -
+                         blackboard_ptr_->random_mode_pos[random_mode_pos_count].x,
+                     blackboard_ptr_->robot_pose_.pose.pose.position.y -
+                         blackboard_ptr_->random_mode_pos[random_mode_pos_count].y) <
+          blackboard_ptr_->distance_tolerance_){
+            random_mode_pos_count++;
+            if(random_mode_pos_count == 4){
+            random_mode_pos_count = 0;
+            }
+          }
+    chassis_exe_ptr_->FastMove(blackboard_ptr_->random_mode_pos[random_mode_pos_count].x,
+                               blackboard_ptr_->random_mode_pos[random_mode_pos_count].y);
+
+
   }
 };
 }  // namespace sp_decision

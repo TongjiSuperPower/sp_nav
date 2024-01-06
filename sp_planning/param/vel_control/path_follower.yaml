@@ -1,4 +1,4 @@
-max_linear_speed: 0.1 #0.8
+max_linear_speed: 0.2 #0.8
 max_vel_theta: 4.5
 distance_tolerance: 0.2 # 0.3
 radius: 0.1

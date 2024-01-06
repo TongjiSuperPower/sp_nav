@@ -80,7 +80,8 @@ class Blackboard {
   };
 
   // buff点坐标: 原点、加血点、buff点
-  std::vector<Point> buff_pos_ = {{0.0, 0.0}, {1.5, 0}, {-0.5, 0}};
+  std::vector<Point> buff_pos_ = {{0.0, 0.0}, {2.5, 0}, {-0.5, 0}};
+  std::vector<Point> random_mode_pos = {{0.0, 0.0}, {-0.5,0.0}, {0.0,-0.5}};
   int min_hp_;
   int min_bullet_;
   int min_outpost_;
@@ -140,23 +141,7 @@ class Blackboard {
     key_z_  = msg->z; 
     referee_data_cbk_mutex.unlock();
   }
-  // void MoveBaseStatusCallback(const actionlib_msgs::GoalStatusArray::ConstPtr& msg){
-  //   move_base_status_cbk_mutex.lock();
-  //   std::cout<<msg->status_list[0].text<<std::endl;
-  //   if(msg->status_list[0].status == 0)
-  //   {
-  //     nav_state_ = NavState::PENDING;
-  //   }  
-  //   if(msg->status_list[0].status == 1)
-  //   {
-  //     nav_state_ = NavState::ACTIVE;
-  //   }
-  //   else if(msg->status_list[0].status == 3)
-  //   {
-  //     nav_state_ = NavState::SUCCEEDED;
-  //   }
-  //   move_base_status_cbk_mutex.unlock();
-  // }
+
 };
 }  // namespace sp_decision
 #endif

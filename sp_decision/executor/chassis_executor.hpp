@@ -29,7 +29,8 @@ class ChassisExecutor {
     FAST,
     STOP,
   };
-  ChassisExecutor(): Action("move_base", true) {
+  ChassisExecutor(){
+
     nh_.param<double>("/max_vel_theta", max_vel_theta_, 3.14);
     set_goal_pub_ =
         nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
@@ -81,7 +82,10 @@ class ChassisExecutor {
     VelIdle();
   }
   void SendDataToPlan(double pos_x, double pos_y) {
-    target_pose_.header.frame_id = "world";
+
+    // if (target_pose_.pose.position.x == pos_x && target_pose_.pose.position.y == pos_y) return;
+   
+    target_pose_.header.frame_id = "map";
     target_pose_.header.stamp = ros::Time::now();
     target_pose_.pose.position.x = pos_x;
     target_pose_.pose.position.y = pos_y;
@@ -90,11 +94,9 @@ class ChassisExecutor {
     target_pose_.pose.orientation.z = 0.0;
     target_pose_.pose.orientation.w = 1.0;
     goal_.target_pose = target_pose_;
-    // set_goal_pub_.publish(goal_);
+    set_goal_pub_.publish(goal_);
 
-    Action.sendGoal(goal_, boost::bind(&ChassisExecutor::doneCb, this, _1, _2),
-    boost::bind(&ChassisExecutor::activeCb, this),
-    Client::SimpleFeedbackCallback());
+
   }
  private:
   ros::NodeHandle nh_;
@@ -104,46 +106,8 @@ class ChassisExecutor {
   geometry_msgs::PoseStamped target_pose_;
   move_base_msgs::MoveBaseGoal goal_;
   double max_vel_theta_;
-  //创建MoveBaseAction对象
-  Client Action;
-  // //判断是否接收到目标点
-  void activeCb();
-  void doneCb(const actionlib::SimpleClientGoalState& state,
-              const move_base_msgs::MoveBaseResultConstPtr& result);
-
 
 };
 
-
-void ChassisExecutor::doneCb(const actionlib::SimpleClientGoalState& state,
-    const move_base_msgs::MoveBaseResultConstPtr& result) {
-    if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
-        ROS_INFO("SUCCEEDED");
-        std::cout<<"succeed"<<std::endl;
-    }
-}
-
-void ChassisExecutor::activeCb() {
-    ROS_INFO("Goal Received");
-    std::cout<<"Goal Received"<<std::endl;
-
-}
-  // void ChassisExecutor::SendDataToPlan(double pos_x, double pos_y) {
-  //   target_pose_.header.frame_id = "world";
-  //   target_pose_.header.stamp = ros::Time::now();
-  //   target_pose_.pose.position.x = pos_x;
-  //   target_pose_.pose.position.y = pos_y;
-  //   target_pose_.pose.orientation.x = 0.0;
-  //   target_pose_.pose.orientation.y = 0.0;
-  //   target_pose_.pose.orientation.z = 0.0;
-  //   target_pose_.pose.orientation.w = 1.0;
-  //   goal_.target_pose = target_pose_;
-  //   // set_goal_pub_.publish(goal_);
-
-  //   // Action.sendGoal(goal_, boost::bind(&ChassisExecutor::doneCb, this, _1, _2),
-  //   // boost::bind(&ChassisExecutor::activeCb, this),
-  //   // Client::SimpleFeedbackCallback());
-  // }
-
-
+ 
 #endif

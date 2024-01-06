@@ -57,7 +57,7 @@ class AddBloodBehavior : public ActionNode {
   BehaviorState Update() {
     if (blackboard_ptr_->robot_hp_ <= blackboard_ptr_->min_hp_) {
       Go2Buff();
-      // log_exe_ptr_->info("behavior: add blood");
+      log_exe_ptr_->info("behavior: add blood");
       return BehaviorState::SUCCESS;
     }
     return BehaviorState::FAILURE;

@@ -17,6 +17,8 @@ class RetreatBehavior : public ActionNode {
      */
     if (blackboard_ptr_->robot_bullet_ < blackboard_ptr_->min_bullet_ ||
         blackboard_ptr_->outpost_hp_ < blackboard_ptr_->min_outpost_) {
+
+        
       if (std::hypot(blackboard_ptr_->robot_pose_.pose.pose.position.x -
                          blackboard_ptr_->buff_pos_[0].x,
                      blackboard_ptr_->robot_pose_.pose.pose.position.y -

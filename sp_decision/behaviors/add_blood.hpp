@@ -43,6 +43,9 @@
 #define ADD_BLOOD_H
 
 #include "behavior_tree.h"
+#include <unistd.h>
+unsigned int sleep(unsigned int seconds);
+
 namespace sp_decision {
 class AddBloodBehavior : public ActionNode {
  public:
@@ -54,7 +57,7 @@ class AddBloodBehavior : public ActionNode {
   BehaviorState Update() {
     if (blackboard_ptr_->robot_hp_ <= blackboard_ptr_->min_hp_) {
       Go2Buff();
-      log_exe_ptr_->info("behavior: add blood");
+      // log_exe_ptr_->info("behavior: add blood");
       return BehaviorState::SUCCESS;
     }
     return BehaviorState::FAILURE;

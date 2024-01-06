@@ -34,7 +34,8 @@
 9：LOST（丢失） - 导航目标丢失。
 */
 namespace sp_decision {
-enum class NavState { ACTIVE, PREEMPTED, SUCCEEDED, ABORTED, REJECTED, PREEMPTING, RECALLING, RECALLED, LOST };
+enum class NavState { PENDING, ACTIVE, PREEMPTED, SUCCEEDED, ABORTED, REJECTED, PREEMPTING, RECALLING, RECALLED, LOST };
+enum class BehaviorMode{ add_blood, retreat};
 class Blackboard {
  public:
   typedef std::shared_ptr<Blackboard> Ptr;
@@ -46,14 +47,18 @@ class Blackboard {
         
     referee_data_sub_ = nh_.subscribe("referee_data", 1, 
                                         &Blackboard::RefereeDataCallback, this);
-    move_base_status_sub_ = nh_.subscribe<actionlib_msgs::GoalStatusArray>("move_base/status",10000,
-                                         &Blackboard::MoveBaseStatusCallback, this);
+    // move_base_status_sub_ = nh_.subscribe<actionlib_msgs::GoalStatusArray>("move_base/status",10000,
+    //                                      &Blackboard::MoveBaseStatusCallback, this);
 
                                         
     nh_.param("min_hp", min_hp_, 200);
     nh_.param("min_bullet", min_bullet_, 100);
     nh_.param("min_outpost", min_outpost_, 300);
     nh_.param("distance_tolerance", distance_tolerance_, float(0.2));
+
+    behavior_mode_ = BehaviorMode::add_blood;
+    last_behavior_mode_ = BehaviorMode::add_blood;
+
   }
   ~Blackboard() {}
   std::mutex match_status_cbk_mutex;
@@ -75,7 +80,7 @@ class Blackboard {
   };
 
   // buff点坐标: 原点、加血点、buff点
-  std::vector<Point> buff_pos_ = {{0.0, 0.0}, {2.5, 0}, {-0.5, 0}};
+  std::vector<Point> buff_pos_ = {{0.0, 0.0}, {1.5, 0}, {-0.5, 0}};
   int min_hp_;
   int min_bullet_;
   int min_outpost_;
@@ -99,8 +104,9 @@ class Blackboard {
   /**
    * @brief 机器人导航状态
    */
-   NavState nav_state_;
-
+  // NavState nav_state_;
+  BehaviorMode behavior_mode_;
+  BehaviorMode last_behavior_mode_;
 
  private:
   ros::NodeHandle nh_;
@@ -134,19 +140,23 @@ class Blackboard {
     key_z_  = msg->z; 
     referee_data_cbk_mutex.unlock();
   }
-  void MoveBaseStatusCallback(const actionlib_msgs::GoalStatusArray::ConstPtr& msg){
-    move_base_status_cbk_mutex.lock();
-    std::cout<<msg->status_list[0].text<<std::endl;
-    if(msg->status_list[0].status == 1)
-    {
-      nav_state_ = NavState::ACTIVE;
-    }
-    else if(msg->status_list[0].status == 3)
-    {
-      nav_state_ = NavState::SUCCEEDED;
-    }
-    move_base_status_cbk_mutex.unlock();
-  }
+  // void MoveBaseStatusCallback(const actionlib_msgs::GoalStatusArray::ConstPtr& msg){
+  //   move_base_status_cbk_mutex.lock();
+  //   std::cout<<msg->status_list[0].text<<std::endl;
+  //   if(msg->status_list[0].status == 0)
+  //   {
+  //     nav_state_ = NavState::PENDING;
+  //   }  
+  //   if(msg->status_list[0].status == 1)
+  //   {
+  //     nav_state_ = NavState::ACTIVE;
+  //   }
+  //   else if(msg->status_list[0].status == 3)
+  //   {
+  //     nav_state_ = NavState::SUCCEEDED;
+  //   }
+  //   move_base_status_cbk_mutex.unlock();
+  // }
 };
 }  // namespace sp_decision
 #endif

@@ -9,11 +9,16 @@
 #ifndef CHASSIS_EXECUTOR_H
 #define CHASSIS_EXECUTOR_H
 
+#include <actionlib/client/simple_action_client.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Twist.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <robot_msg/RobotStateMsg.h>
 #include <ros/ros.h>
+
+
+//给MoveBaseAction定义一个别名，方便创建对象
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> Client;
 
 class ChassisExecutor {
  public:
@@ -24,7 +29,7 @@ class ChassisExecutor {
     FAST,
     STOP,
   };
-  ChassisExecutor() {
+  ChassisExecutor(): Action("move_base", true) {
     nh_.param<double>("/max_vel_theta", max_vel_theta_, 3.14);
     set_goal_pub_ =
         nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1);
@@ -35,18 +40,7 @@ class ChassisExecutor {
     vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
   }
   typedef std::shared_ptr<ChassisExecutor> Ptr;
-  void SendDataToPlan(double pos_x, double pos_y) {
-    target_pose_.header.frame_id = "world";
-    target_pose_.header.stamp = ros::Time::now();
-    target_pose_.pose.position.x = pos_x;
-    target_pose_.pose.position.y = pos_y;
-    target_pose_.pose.orientation.x = 0.0;
-    target_pose_.pose.orientation.y = 0.0;
-    target_pose_.pose.orientation.z = 0.0;
-    target_pose_.pose.orientation.w = 1.0;
-    goal_.target_pose = target_pose_;
-    set_goal_pub_.publish(goal_);
-  }
+
   void robotStatePub(RobotState robot_state) {
     robot_msg::RobotStateMsg robot_state_msg;
     robot_state_msg.robot_state = static_cast<int8_t>(robot_state);
@@ -86,7 +80,22 @@ class ChassisExecutor {
     robotStatePub(RobotState::IDLE);
     VelIdle();
   }
+  void SendDataToPlan(double pos_x, double pos_y) {
+    target_pose_.header.frame_id = "world";
+    target_pose_.header.stamp = ros::Time::now();
+    target_pose_.pose.position.x = pos_x;
+    target_pose_.pose.position.y = pos_y;
+    target_pose_.pose.orientation.x = 0.0;
+    target_pose_.pose.orientation.y = 0.0;
+    target_pose_.pose.orientation.z = 0.0;
+    target_pose_.pose.orientation.w = 1.0;
+    goal_.target_pose = target_pose_;
+    // set_goal_pub_.publish(goal_);
 
+    Action.sendGoal(goal_, boost::bind(&ChassisExecutor::doneCb, this, _1, _2),
+    boost::bind(&ChassisExecutor::activeCb, this),
+    Client::SimpleFeedbackCallback());
+  }
  private:
   ros::NodeHandle nh_;
   ros::Publisher set_goal_pub_;
@@ -95,5 +104,46 @@ class ChassisExecutor {
   geometry_msgs::PoseStamped target_pose_;
   move_base_msgs::MoveBaseGoal goal_;
   double max_vel_theta_;
+  //创建MoveBaseAction对象
+  Client Action;
+  // //判断是否接收到目标点
+  void activeCb();
+  void doneCb(const actionlib::SimpleClientGoalState& state,
+              const move_base_msgs::MoveBaseResultConstPtr& result);
+
+
 };
+
+
+void ChassisExecutor::doneCb(const actionlib::SimpleClientGoalState& state,
+    const move_base_msgs::MoveBaseResultConstPtr& result) {
+    if (state == actionlib::SimpleClientGoalState::SUCCEEDED) {
+        ROS_INFO("SUCCEEDED");
+        std::cout<<"succeed"<<std::endl;
+    }
+}
+
+void ChassisExecutor::activeCb() {
+    ROS_INFO("Goal Received");
+    std::cout<<"Goal Received"<<std::endl;
+
+}
+  // void ChassisExecutor::SendDataToPlan(double pos_x, double pos_y) {
+  //   target_pose_.header.frame_id = "world";
+  //   target_pose_.header.stamp = ros::Time::now();
+  //   target_pose_.pose.position.x = pos_x;
+  //   target_pose_.pose.position.y = pos_y;
+  //   target_pose_.pose.orientation.x = 0.0;
+  //   target_pose_.pose.orientation.y = 0.0;
+  //   target_pose_.pose.orientation.z = 0.0;
+  //   target_pose_.pose.orientation.w = 1.0;
+  //   goal_.target_pose = target_pose_;
+  //   // set_goal_pub_.publish(goal_);
+
+  //   // Action.sendGoal(goal_, boost::bind(&ChassisExecutor::doneCb, this, _1, _2),
+  //   // boost::bind(&ChassisExecutor::activeCb, this),
+  //   // Client::SimpleFeedbackCallback());
+  // }
+
+
 #endif

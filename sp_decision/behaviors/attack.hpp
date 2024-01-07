@@ -14,6 +14,7 @@ class AttackBehavior : public ActionNode {
                    LogExecutor::Ptr &log_exe_ptr)
       : ActionNode::ActionNode(name, level, blackboard_ptr, chassis_exe_ptr,log_exe_ptr) {}
   BehaviorState Update() {
+    attack_outpost();
     log_exe_ptr_->info("behavior: attack");
     return BehaviorState::SUCCESS;
   }

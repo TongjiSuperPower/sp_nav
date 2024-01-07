@@ -67,8 +67,8 @@ class AddBloodBehavior : public ActionNode {
   void Go2Buff() {
     chassis_exe_ptr_->FastMove(blackboard_ptr_->buff_pos_[1].x,
                                blackboard_ptr_->buff_pos_[1].y);
-    chassis_exe_ptr_->vel_msg_pub_.linear.x = blackboard_ptr_->vel_msg_sub_.linear.x * 2;
-    chassis_exe_ptr_->vel_msg_pub_.linear.y = blackboard_ptr_->vel_msg_sub_.linear.y * 2;
+    chassis_exe_ptr_->vel_msg_pub_.linear.x = blackboard_ptr_->vel_msg_sub_.linear.x;
+    chassis_exe_ptr_->vel_msg_pub_.linear.y = blackboard_ptr_->vel_msg_sub_.linear.y;
   }
 };
 }  // namespace robot_decision

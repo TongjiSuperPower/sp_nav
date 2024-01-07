@@ -103,7 +103,7 @@ class Blackboard {
     match_status_cbk_mutex.lock();
     robot_hp_ = msg->robot_hp;
     robot_bullet_ = msg->robot_bullet;
-
+    outpost_hp_ = msg->outpost_hp;
     match_state_received_ = true;
     match_status_cbk_mutex.unlock();
   }

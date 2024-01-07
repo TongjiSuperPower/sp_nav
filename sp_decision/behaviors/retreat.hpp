@@ -17,25 +17,12 @@ class RetreatBehavior : public ActionNode {
      */
     if (blackboard_ptr_->robot_bullet_ < blackboard_ptr_->min_bullet_ ||
         blackboard_ptr_->outpost_hp_ < blackboard_ptr_->min_outpost_) {
-
-        
-      // if (std::hypot(blackboard_ptr_->robot_pose_.pose.pose.position.x -
-      //                    blackboard_ptr_->buff_pos_[0].x,
-      //                blackboard_ptr_->robot_pose_.pose.pose.position.y -
-      //                    blackboard_ptr_->buff_pos_[0].y) >
-      //     blackboard_ptr_->distance_tolerance_) {
-      //   log_exe_ptr_->info("behavior[retreat]:", "fast move");
-      //   Go2Init();
-      // } else {
-      //   log_exe_ptr_->info("behavior[retreat]:", "idle");
-      //   RandomMode();
-      //   //chassis_exe_ptr_->Idle();
-      // }
       RandomMode();
       log_exe_ptr_->info("behavior[retreat]:", "fast move");
 
       return BehaviorState::SUCCESS;
     }
+    return BehaviorState::FAILURE;
   }
 
  private:

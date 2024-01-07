@@ -13,9 +13,11 @@ DecisionNode::DecisionNode() {
       new AddBloodBehavior("add blood", 1, blackboard_, chassis_exe_, log_exe_);
   RetreatBehavior* retreat_node_ =
       new RetreatBehavior("add retreat", 2, blackboard_, chassis_exe_, log_exe_);
+  AttackBehavior* attack_node_ = new AttackBehavior("attack", 3, blackboard_, chassis_exe_, log_exe_);
 
   root_node_->addChild(add_blood_node_);
   root_node_->addChild(retreat_node_);
+  root_node_->addChild(attack_node_);
   std::stringstream str;
   str << std::endl << "***********************" << std::endl;
   str << "*Super Power Decision*" << std::endl;

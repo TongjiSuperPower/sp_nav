@@ -5,6 +5,7 @@
 
 #include "behaviors/add_blood.hpp"
 #include "behaviors/retreat.hpp"
+#include "behaviors/attack.hpp"
 
 namespace sp_decision {
 class DecisionNode {
